@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusEcho - Feedback Intelligence System</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            min-height: 100vh; padding: 20px;
+        }
+        .wrap { max-width: 860px; margin: 0 auto; }
+        .header {
+            background: rgba(255,255,255,0.12);
+            color: white; padding: 28px; border-radius: 16px;
+            text-align: center; margin-bottom: 22px;
+        }
+        .header h1 { font-size: 24px; font-weight: 800; }
+        .header p { font-size: 13px; margin-top: 7px; opacity: 0.88; }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; margin: 3px; color: white;
+        }
+        .card {
+            background: white; border-radius: 16px;
+            padding: 28px; margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        }
+        .card h2 { color: #1a237e; font-size: 19px; margin-bottom: 6px; }
+        .sub { color: #999; font-size: 13px; margin-bottom: 18px; }
+        .api-bar {
+            background: #e8f5e9; border: 1px solid #a5d6a7;
+            border-radius: 8px; padding: 9px 14px;
+            font-size: 12px; color: #2e7d32; margin-bottom: 18px;
+        }
+        select, textarea {
+            width: 100%; padding: 12px;
+            border: 2px solid #e0e0e0; border-radius: 9px;
+            font-size: 14px; margin-bottom: 13px;
+            font-family: Arial; outline: none; background: #fafafa;
+        }
+        select:focus, textarea:focus {
+            border-color: #1a237e; background: white;
+        }
+        textarea { min-height: 115px; resize: vertical; }
+        .btn-blue {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white; border: none; border-radius: 9px;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+        }
+        .btn-green {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white; border: none; border-radius: 9px;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            margin-bottom: 22px;
+        }
+        .msg {
+            padding: 12px 16px; border-radius: 9px;
+            font-size: 14px; margin-top: 13px;
+            display: none; line-height: 1.6;
+        }
+        .ok { background:#e8f5e9; color:#1b5e20; border:1px solid #a5d6a7; display:block; }
+        .er { background:#ffebee; color:#b71c1c; border:1px solid #ef9a9a; display:block; }
+        .ld { background:#e3f2fd; color:#0d47a1; border:1px solid #90caf9; display:block; }
+        .stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:22px; }
+        .stat {
+            flex:1; min-width:115px; padding:18px 10px;
+            border-radius:12px; text-align:center; color:white;
+        }
+        .stat .n { font-size:34px; font-weight:800; }
+        .stat .l { font-size:12px; margin-top:5px; }
+        .c1{background:linear-gradient(135deg,#1565c0,#1e88e5);}
+        .c2{background:linear-gradient(135deg,#1b5e20,#2e7d32);}
+        .c3{background:linear-gradient(135deg,#b71c1c,#e53935);}
+        .c4{background:linear-gradient(135deg,#37474f,#546e7a);}
+        .c5{background:linear-gradient(135deg,#bf360c,#e64a19);}
+        .alert-box {
+            background:#fff8e1; border-left:5px solid #f57f17;
+            padding:13px 16px; border-radius:8px; margin-bottom:18px;
+            color:#e65100; font-weight:700; font-size:14px;
+        }
+        .sec {
+            font-size:15px; font-weight:700; color:#1a237e;
+            margin:18px 0 10px 0; padding-bottom:7px;
+            border-bottom:2px solid #e8eaf6;
+        }
+        .tag {
+            display:inline-block; background:#e8eaf6; color:#283593;
+            padding:5px 13px; border-radius:20px;
+            font-size:12px; margin:3px; font-weight:500;
+        }
+        .rec {
+            background:#f3e5f5; padding:14px; border-radius:9px;
+            color:#4a148c; font-weight:600;
+            margin-bottom:18px; font-size:14px;
+        }
+        .report {
+            background:#f5f5f5; border-radius:9px; padding:16px;
+            font-size:12px; white-space:pre-wrap; line-height:1.8;
+            max-height:360px; overflow-y:auto;
+            font-family:'Courier New',monospace; color:#333;
+        }
+        .empty { text-align:center; padding:35px; color:#bbb; font-size:14px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="header">
+        <h1>CampusEcho - Feedback Intelligence System</h1>
+        <p>Online Feedback Monitoring and Sentiment Intelligence System</p>
+        <div style="margin-top:10px;">
+            <span class="badge">Anonymous</span>
+            <span class="badge">AES256 Encrypted</span>
+            <span class="badge">Amazon Comprehend NLP</span>
+            <span class="badge">AWS Lambda</span>
+            <span class="badge">S3 Storage</span>
+            <span class="badge">Audit Logged</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="api-bar" id="apiBar">
+            Connecting to AWS API Gateway...
+        </div>
+        <h2>Submit Anonymous Feedback</h2>
+        <p class="sub">
+            Your identity is 100% protected.
+            No name or student ID is stored anywhere.
+        </p>
+        <select id="cat">
+            <option value="academics">Academics / Syllabus</option>
+            <option value="faculty">Faculty / Teaching Quality</option>
+            <option value="facilities">Facilities / Infrastructure</option>
+            <option value="hostel">Hostel / Canteen</option>
+            <option value="exam">Exam / Results</option>
+            <option value="library">Library / Resources</option>
+            <option value="transport">Transport</option>
+            <option value="general">General Feedback</option>
+        </select>
+        <textarea id="fbText"
+            placeholder="Write your honest feedback here. Your identity is completely anonymous...">
+        </textarea>
+        <button class="btn-blue" onclick="submitFeedback()">
+            Submit Feedback Anonymously
+        </button>
+        <div class="msg" id="fbMsg"></div>
+    </div>
+
+    <div class="card">
+        <h2>Admin Intelligence Dashboard</h2>
+        <p class="sub">
+            AI-powered sentiment analysis using Amazon Comprehend NLP.
+            Identifies priority issues and generates smart summaries.
+        </p>
+        <button class="btn-green" onclick="loadSummary()">
+            Load AI Summary and Analytics
+        </button>
+        <div id="dash">
+            <div class="empty">
+                Click the button above to load feedback analytics
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    const API_URL = 'https://campusecho-feedback-2026.s3-website-us-east-1.amazonaws.com';
+
+    window.onload = function() {
+        document.getElementById('apiBar').innerText =
+            'Connected to AWS API Gateway: ' + API_URL;
+    };
+
+    async function submitFeedbackkk() {
+        const fb = document.getElementById('fbText').value.trim();
+        const cat = document.getElementById('cat').value;
+        const msg = document.getElementById('fbMsg');
+        if (!fb || fb.length < 3) {
+            msg.className = 'msg er';
+            msg.innerText = 'Please write your feedback first!';
+            return;
+        }
+        msg.className = 'msg ld';
+        msg.innerText = 'Submitting to AWS securely...';
+        try {
+            const res = await fetch(API_URL + '/submit-feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feedback: fb, category: cat })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                msg.className = 'msg ok';
+                msg.innerHTML = 'Submitted successfully!<br>' +
+                    'Anonymous ID: <strong>' + data.id + '</strong><br>' +
+                    'Encrypted and stored in AWS S3.';
+                document.getElementById('fbText').value = '';
+            } else {
+                msg.className = 'msg er';
+                msg.innerText = 'Error: ' + (data.error || 'Failed');
+            }
+        } catch(err) {
+            msg.className = 'msg er';
+            msg.innerText = 'Connection Error: ' + err.message;
+        }
+    }
+
+    async function loadSummary() {
+        const div = document.getElementById('dash');
+        div.innerHTML = '<div class="empty">Loading from AWS...</div>';
+        try {
+            const res = await fetch(API_URL + '/get-summary');
+            const data = await res.json();
+            if (data.message) {
+                div.innerHTML = '<div class="empty">' + data.message + '</div>';
+                return;
+            }
+            const sb = data.sentiment_breakdown || {};
+            const pc = data.priority_counts || {};
+            const total = data.total_feedback || 0;
+            let html = '';
+            if ((pc.HIGH||0) > 0) {
+                html += '<div class="alert-box">ALERT: ' + pc.HIGH +
+                    ' High Priority Issues Need Immediate Attention!</div>';
+            }
+            html += '<div class="stats">';
+            html += '<div class="stat c1"><div class="n">' + total + '</div><div class="l">Total</div></div>';
+            html += '<div class="stat c2"><div class="n">' + (sb.POSITIVE||0) + '</div><div class="l">Positive</div></div>';
+            html += '<div class="stat c3"><div class="n">' + (sb.NEGATIVE||0) + '</div><div class="l">Negative</div></div>';
+            html += '<div class="stat c4"><div class="n">' + (sb.NEUTRAL||0) + '</div><div class="l">Neutral</div></div>';
+            html += '<div class="stat c5"><div class="n">' + (pc.HIGH||0) + '</div><div class="l">Priority</div></div>';
+            html += '</div>';
+            if (data.top_concerns && data.top_concerns.length > 0) {
+                html += '<div class="sec">Top Concerns Raised</div><div style="margin-bottom:16px;">';
+                data.top_concerns.forEach(function(i) {
+                    html += '<span class="tag">' + i[0] + ' (' + i[1] + 'x)</span>';
+                });
+                html += '</div>';
+            }
+            html += '<div class="sec">AI Recommendation</div>';
+            html += '<div class="rec">' + (data.recommendation||'System stable.') + '</div>';
+            html += '<div class="sec">Full AI Generated Report</div>';
+            html += '<div class="report">' + (data.summary_text||'') + '</div>';
+            div.innerHTML = html;
+        } catch(err) {
+            div.innerHTML = '<div class="empty" style="color:red;">Error: ' +
+                err.message + '</div>';
+        }
+    }
+</script>
+</body>
+</html>
